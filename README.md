@@ -1,1 +1,2 @@
-## zenbox - Go 语言开发工具箱
+# zenbox
+做好用的 Golang 开发工具
