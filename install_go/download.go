@@ -21,7 +21,7 @@ import (
 var (
 	// 这个 URL 国内可能访问不到,谁能提供反代吗?
 	DefaultDownloadURLPrefix = "http://216.58.200.240/golang"
-	DefaultDownloadHost = "storage.googleapis.com"
+	DefaultDownloadHost      = "storage.googleapis.com"
 	DefaultProxyURL          = ""
 )
 
@@ -79,14 +79,21 @@ func downloadGolang(target, dest string) error {
 
 	bar.Finish()
 
-	sresp, err := http.Get(uri + ".sha256")
+	req, err = http.NewRequest("GET", uri+".sha256", nil)
+	req.Host = DefaultDownloadHost
+	if err != nil {
+		return err
+	}
+	req.Header.Add("User-Agent", fmt.Sprintf("golang.org-getgo/%s", target))
+
+	sresp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return fmt.Errorf("获取文件 %s 失败: %v", uri, err)
 	}
 	defer sresp.Body.Close()
 
 	if sresp.StatusCode > 299 {
-		return fmt.Errorf("获取 %s 失败: %d", uri, sresp.StatusCode)
+		return fmt.Errorf("获取 %s.sha256 失败: %d", uri, sresp.StatusCode)
 	}
 
 	shasum, err := ioutil.ReadAll(sresp.Body)
