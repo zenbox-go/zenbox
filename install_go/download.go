@@ -20,7 +20,8 @@ import (
 
 var (
 	// 这个 URL 国内可能访问不到,谁能提供反代吗?
-	DefaultDownloadURLPrefix = "https://storage.googleapis.com/golang"
+	DefaultDownloadURLPrefix = "http://216.58.200.240/golang"
+	DefaultDownloadHost = "storage.googleapis.com"
 	DefaultProxyURL          = ""
 )
 
@@ -35,6 +36,7 @@ func downloadGolang(target, dest string) error {
 	fmt.Printf("开始下载 Go 安装包: %s\n", uri)
 
 	req, err := http.NewRequest("GET", uri, nil)
+	req.Host = DefaultDownloadHost
 	if err != nil {
 		return err
 	}
