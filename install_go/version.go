@@ -100,7 +100,5 @@ func getGoVersionsFormRemote() error {
 		time.Sleep(200 * time.Millisecond)
 	}
 
-	w.Flush()
-
-	return nil
+	return w.Flush()
 }

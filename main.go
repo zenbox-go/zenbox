@@ -4,21 +4,23 @@ import (
 	"fmt"
 	"os"
 	"time"
-
 	"zenbox/cmd"
 
 	"gopkg.in/urfave/cli.v2"
 )
 
 var (
-	Version = "0.1"
+	// 定义版本号,规范参考: https://semver.org/lang/zh-CN/
+	// 发行版编译时由编译器指定版本号:
+	//    go build -ldflags "-X main.version=0.1.1-alpha+$(git rev-parse --short HEAD) -s -w"
+	version = "0.1.1-alpha+"
 )
 
 func main() {
 	app := &cli.App{
 		Name:     "zenbox",
 		Usage:    "做好用的 Go 项目管理工具",
-		Version:  Version,
+		Version:  version,
 		Compiled: time.Now(),
 		Authors: []*cli.Author{
 			{
@@ -29,7 +31,6 @@ func main() {
 		HelpName:              "zenbox",
 		HideHelp:              true,
 		EnableShellCompletion: true,
-		ArgsUsage:             "[arrgh]",
 		Commands: []*cli.Command{
 			cmd.CmdInit,
 			cmd.CmdTools,
