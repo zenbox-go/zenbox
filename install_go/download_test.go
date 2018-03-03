@@ -18,10 +18,8 @@ func TestDownloadGoVersion(t *testing.T) {
 	}
 	defer os.RemoveAll(tmpd)
 
-	if err := downloadGoVersion(
+	if err := downloadGolang(
 		"go1.8.1",
-		"linux",
-		"amd64",
 		filepath.Join(tmpd, "go"),
 	); err != nil {
 		t.Fatal(err)

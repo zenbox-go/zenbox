@@ -51,7 +51,7 @@ func checkGoInstalled(ctx context.Context) error {
 }
 
 func setupGo(_ context.Context) error {
-	versions, err := getAllGoVersion()
+	versions, err := getGoVersions()
 	if err != nil {
 		return err
 	}
@@ -83,7 +83,7 @@ func setupGo(_ context.Context) error {
 	cacheFile := filepath.Join("cache", "downloads", targetFile)
 
 	if _, e := os.Stat(cacheFile); os.IsNotExist(e) {
-		if err := downloadGoVersion(targetFile, DefaultInstallPath); err != nil {
+		if err := downloadGolang(targetFile, DefaultInstallPath); err != nil {
 			return err
 		}
 	} else {

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"strings"
 
@@ -30,7 +31,11 @@ func clearAction(_ *cli.Context) error {
 		return errors.New("放弃清理缓存")
 	}
 
-	os.RemoveAll("cache")
+	if err = os.RemoveAll("cache"); err != nil {
+		return cli.Exit("缓存清理失败: "+err.Error(), 1)
+	}
+
+	fmt.Fprintln(os.Stdout, "缓存清理完毕")
 
 	return nil
 }

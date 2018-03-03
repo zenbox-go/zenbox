@@ -3,8 +3,6 @@ package install_go
 import (
 	"archive/tar"
 	"archive/zip"
-	"bufio"
-	"bytes"
 	"compress/gzip"
 	"crypto/sha256"
 	"fmt"
@@ -14,23 +12,19 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
-	"sort"
 	"strconv"
 	"strings"
-	"time"
 
-	"github.com/blang/semver"
 	"gopkg.in/cheggaaa/pb.v1"
 )
 
 var (
 	DefaultDownloadURLPrefix = "https://dl.google.com/go"
 	DefaultProxyURL          = ""
-	DefaultSourceURL         = "https://go.googlesource.com/go/+refs?format=TEXT"
 )
 
 // https://dl.google.com/go
-func downloadGoVersion(target, dest string) error {
+func downloadGolang(target, dest string) error {
 	if DefaultProxyURL != "" {
 		os.Setenv("HTTPS_PROXY", DefaultProxyURL)
 	}
@@ -193,108 +187,4 @@ func unpackZip(src, dest string) error {
 	}
 
 	return nil
-}
-
-func getAllGoVersion() ([]string, error) {
-	getRemoteVersion := func(name string) ([]byte, error) {
-		if DefaultProxyURL != "" {
-			os.Setenv("HTTPS_PROXY", DefaultProxyURL)
-		}
-
-		resp, err := http.Get(DefaultSourceURL)
-		if err != nil {
-			return nil, fmt.Errorf("无法连接到 Go 版本号获取地址: %v", err)
-		}
-		defer resp.Body.Close()
-
-		if resp.StatusCode > 299 {
-			return nil, fmt.Errorf("无法获取到 Go 版本号列表: %d", resp.StatusCode)
-		}
-
-		b, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			return nil, err
-		}
-
-		if err = ioutil.WriteFile(name, b, os.ModePerm); err != nil {
-			return nil, fmt.Errorf("缓存版本文件错误: %v", err)
-		}
-
-		return b, nil
-	}
-
-	var (
-		b   []byte
-		err error
-	)
-
-	versionName := filepath.Join("cache", "VERSION")
-	if fi, e := os.Stat(versionName); os.IsNotExist(e) {
-		b, err = getRemoteVersion(versionName)
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		if time.Now().Sub(fi.ModTime()) < time.Hour*72 {
-			b, err = ioutil.ReadFile(versionName)
-			if err != nil {
-				return nil, fmt.Errorf("读取版本缓存文件错误: %v", err)
-			}
-		} else {
-			b, err = getRemoteVersion(versionName)
-			if err != nil {
-				return nil, err
-			}
-		}
-	}
-
-	sortVersions := make([]string, 0)
-	tmp := make(map[string]string)
-
-	scanner := bufio.NewScanner(bytes.NewReader(b))
-	for scanner.Scan() {
-		line := scanner.Text()
-		if strings.Contains(line, "refs/tags/go") {
-			ls := strings.Fields(line)
-			if len(ls) == 2 {
-				version := strings.Replace(ls[1], "refs/tags/go", "", -1)
-				oldVersion := version
-				sections := strings.Split(version, ".")
-				switch len(sections) {
-				case 1:
-					version += ".0.0"
-				case 2:
-					if strings.Contains(version, "beta") {
-						version = strings.Replace(version, "beta", ".0-beta", -1)
-					} else if strings.Contains(version, "rc") {
-						version = strings.Replace(version, "rc", ".0-rc", -1)
-					} else {
-						version += ".0"
-					}
-				case 3:
-					if strings.Contains(version, "rc") {
-						version = strings.Replace(version, "rc", "-rc", -1)
-					} else if strings.Contains(version, "beta") {
-						version = strings.Replace(version, "beta", "-beta", -1)
-					}
-				}
-
-				tmp[version] = oldVersion
-				sortVersions = append(sortVersions, version)
-			}
-		}
-	}
-
-	sort.SliceStable(sortVersions, func(i, j int) bool {
-		v1, _ := semver.Make(sortVersions[i])
-		v2, _ := semver.Make(sortVersions[j])
-		return v1.GE(v2)
-	})
-
-	versions := make([]string, 0)
-	for _, value := range sortVersions {
-		versions = append(versions, tmp[value])
-	}
-
-	return versions, nil
 }

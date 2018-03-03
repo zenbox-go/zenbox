@@ -49,3 +49,15 @@ required = ["gopkg.in/urfave/cli.v2/altsrc"]
 [[constraint]]
   name = "github.com/fsnotify/fsnotify"
   version = "1.4.7"
+
+[[constraint]]
+  name = "github.com/google/go-github"
+  version = "15.0.0"
+
+[[constraint]]
+  branch = "master"
+  name = "golang.org/x/oauth2"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/chzyer/readline"
