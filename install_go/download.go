@@ -16,13 +16,19 @@ import (
 	"strings"
 
 	"gopkg.in/cheggaaa/pb.v1"
+	"time"
 )
 
 var (
 	// 这个 URL 国内可能访问不到,谁能提供反代吗?
-	DefaultDownloadURLPrefix = "http://216.58.200.240/golang"
-	DefaultDownloadHost      = "storage.googleapis.com"
-	DefaultProxyURL          = ""
+
+	DefaultDownloadURLPrefix = "https://dl.google.com/go"
+
+	// 上面地址不能访问将切换到下面地址
+	StandbyDownloadURLPrefix = "http://216.58.200.240/golang"
+	StandbyDownloadHost      = "storage.googleapis.com"
+
+	DefaultProxyURL = ""
 )
 
 // https://dl.google.com/go
@@ -31,12 +37,23 @@ func downloadGolang(target, dest string) error {
 		os.Setenv("HTTPS_PROXY", DefaultProxyURL)
 	}
 
-	uri := fmt.Sprintf("%s/%s", DefaultDownloadURLPrefix, target)
+	var uri string
+
+	urlState := pingUrl(DefaultDownloadURLPrefix)
+	fmt.Println(urlState)
+	if urlState {
+		uri = fmt.Sprintf("%s/%s", DefaultDownloadURLPrefix, target)
+	} else {
+		uri = fmt.Sprintf("%s/%s", StandbyDownloadURLPrefix, target)
+	}
 
 	fmt.Printf("开始下载 Go 安装包: %s\n", uri)
 
 	req, err := http.NewRequest("GET", uri, nil)
-	req.Host = DefaultDownloadHost
+	if !urlState {
+		req.Host = StandbyDownloadHost
+	}
+
 	if err != nil {
 		return err
 	}
@@ -80,7 +97,9 @@ func downloadGolang(target, dest string) error {
 	bar.Finish()
 
 	req, err = http.NewRequest("GET", uri+".sha256", nil)
-	req.Host = DefaultDownloadHost
+	if !urlState {
+		req.Host = StandbyDownloadHost
+	}
 	if err != nil {
 		return err
 	}
@@ -202,4 +221,23 @@ func unpackZip(src, dest string) error {
 	}
 
 	return nil
+}
+
+func pingUrl(url string) bool {
+	// 超时3秒即代表地址无法访问
+	timeout := time.Duration(3 * time.Second)
+	client := http.Client{
+		Timeout: timeout,
+	}
+	resp, err := client.Get(url)
+
+	if err != nil {
+		return false
+	}
+	defer resp.Body.Close()
+	_, err = ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return false
+	}
+	return true
 }
