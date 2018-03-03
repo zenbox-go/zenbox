@@ -20,7 +20,8 @@ import (
 
 var (
 	// 这个 URL 国内可能访问不到,谁能提供反代吗?
-	DefaultDownloadURLPrefix = "https://storage.googleapis.com/golang"
+
+	DefaultDownloadURLPrefix = "http://go-dl.boiko.cn/golang"
 	DefaultProxyURL          = ""
 )
 
