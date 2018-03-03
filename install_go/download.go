@@ -19,6 +19,7 @@ import (
 )
 
 var (
+	// 这个 URL 国内可能访问不到,谁能提供反代吗?
 	DefaultDownloadURLPrefix = "https://storage.googleapis.com/golang"
 	DefaultProxyURL          = ""
 )
@@ -94,6 +95,11 @@ func downloadGolang(target, dest string) error {
 	sum := fmt.Sprintf("%x", h.Sum(nil))
 	if sum != string(shasum) {
 		return fmt.Errorf("下载的文件 HASH 与服务器的文件 HASH 不匹配: %s != %s", sum, string(shasum))
+	}
+
+	if err = ioutil.WriteFile(targetName+".sha256", shasum, 0600); err != nil {
+		os.Remove(targetName)
+		return err
 	}
 
 	unpackFn := unpackTar

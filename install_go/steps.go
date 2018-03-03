@@ -66,7 +66,7 @@ func setupGo(_ context.Context) error {
 	prompt := &promptui.Select{
 		Label:     "选择需要安装的 Go 版本",
 		Items:     versions,
-		Size:      10,
+		Size:      20,
 		Templates: templates,
 	}
 
@@ -83,8 +83,11 @@ func setupGo(_ context.Context) error {
 	targetFile := fmt.Sprintf("%s.%s-%s.%s", version, runtime.GOOS, runtime.GOARCH, suffix)
 	cacheFile := filepath.Join("cache", "downloads", targetFile)
 
-	if _, e := os.Stat(cacheFile); os.IsNotExist(e) {
+	if _, e := os.Stat(cacheFile + ".sha256"); os.IsNotExist(e) {
 		if err := downloadGolang(targetFile, DefaultInstallPath); err != nil {
+			// 下载安装包出现任何错误,都删除已下载的文件
+			os.Remove(cacheFile + ".sha256")
+			os.Remove(cacheFile)
 			return err
 		}
 	} else {
