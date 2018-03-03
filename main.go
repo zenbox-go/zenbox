@@ -18,20 +18,11 @@ var (
 
 func main() {
 	app := &cli.App{
-		Name:     "zenbox",
-		Usage:    "做好用的 Go 项目管理工具",
-		Version:  version,
-		Compiled: time.Now(),
-		Authors: []*cli.Author{
-			{
-				Name:  "果子",
-				Email: "zmguozi@gmail.com",
-			},
-			{
-				Name:  "aimuz",
-				Email: "mr.imuz@gmail.com",
-			},
-		},
+		Name:                  "zenbox",
+		Usage:                 "做好用的 Go 项目管理工具",
+		Version:               version,
+		Compiled:              time.Now(),
+		Authors:               cmd.Authors,
 		HelpName:              "zenbox",
 		HideHelp:              true,
 		EnableShellCompletion: true,
