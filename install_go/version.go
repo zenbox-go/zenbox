@@ -16,10 +16,6 @@ import (
 )
 
 func getGoVersions() ([]string, error) {
-	var (
-		b   []byte
-		err error
-	)
 	vs := make([]string, 0)
 	versionName := filepath.Join("cache", "VERSION")
 	if fi, e := os.Stat(versionName); os.IsNotExist(e) {
@@ -28,22 +24,17 @@ func getGoVersions() ([]string, error) {
 		}
 	} else {
 		// 缓存文件过期
-		if time.Now().Sub(fi.ModTime()) < time.Hour*24*30 {
-			b, err = ioutil.ReadFile(versionName)
-			if err != nil {
-				return nil, fmt.Errorf("读取版本缓存文件错误: %v", err)
-			}
-		} else {
+		if time.Now().Sub(fi.ModTime()) > time.Hour*24*30 {
 			os.Remove(versionName)
 			if err := getGoVersionsFormRemote(); err != nil {
 				return nil, err
 			}
-
-			b, err = ioutil.ReadFile(versionName)
-			if err != nil {
-				return nil, fmt.Errorf("读取版本缓存文件错误: %v", err)
-			}
 		}
+	}
+
+	b, err := ioutil.ReadFile(versionName)
+	if err != nil {
+		return nil, fmt.Errorf("读取版本缓存文件错误: %v", err)
 	}
 
 	scanner := bufio.NewScanner(bytes.NewReader(b))

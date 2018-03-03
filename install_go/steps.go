@@ -51,6 +51,7 @@ func checkGoInstalled(ctx context.Context) error {
 }
 
 func setupGo(_ context.Context) error {
+	fmt.Print("正在获取Golang版本号列表...")
 	versions, err := getGoVersions()
 	if err != nil {
 		return err
