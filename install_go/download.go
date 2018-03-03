@@ -19,7 +19,7 @@ import (
 )
 
 var (
-	DefaultDownloadURLPrefix = "https://dl.google.com/go"
+	DefaultDownloadURLPrefix = "https://storage.googleapis.com/golang"
 	DefaultProxyURL          = ""
 )
 

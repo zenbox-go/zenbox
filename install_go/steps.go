@@ -80,7 +80,7 @@ func setupGo(_ context.Context) error {
 		suffix = "zip"
 	}
 
-	targetFile := fmt.Sprintf("go%s.%s-%s.%s", version, runtime.GOOS, runtime.GOARCH, suffix)
+	targetFile := fmt.Sprintf("%s.%s-%s.%s", version, runtime.GOOS, runtime.GOARCH, suffix)
 	cacheFile := filepath.Join("cache", "downloads", targetFile)
 
 	if _, e := os.Stat(cacheFile); os.IsNotExist(e) {
