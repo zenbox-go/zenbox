@@ -53,7 +53,7 @@ func init() {
    {{range $index, $option := .VisibleFlags}}{{if $index}}
    {{end}}{{$option}}{{end}}{{end}}{{if len .Authors}}
 
-开发维护{{with $length := len .Authors}}{{if ne 1 $length}}S{{end}}{{end}}:
+开发维护{{with $length := len .Authors}}{{if ne 1 $length}}{{end}}{{end}}:
    {{range $index, $author := .Authors}}{{if $index}}
    {{end}}{{$author}}{{end}}{{end}}
 

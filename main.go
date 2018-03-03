@@ -27,6 +27,10 @@ func main() {
 				Name:  "果子",
 				Email: "zmguozi@gmail.com",
 			},
+			{
+				Name:  "aimuz",
+				Email: "mr.imuz@gmail.com",
+			},
 		},
 		HelpName:              "zenbox",
 		HideHelp:              true,
