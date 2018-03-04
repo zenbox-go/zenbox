@@ -57,10 +57,16 @@ func setupGo(_ context.Context) error {
 		return err
 	}
 
+	help := `{{ "按[CTRL+C]退出安装,使用方向键选择安装版本:" | faint }} {{ .NextKey | faint }} ` +
+		`{{ .PrevKey | faint }} {{ .PageDownKey | faint }} {{ .PageUpKey | faint }} ` +
+		`{{ if .Search }} {{ "and" | faint }} {{ .SearchKey | faint }} {{ "toggles search" | faint }}{{ end }}`
+
+	if runtime.GOOS == "windows" {
+		help = `{{ "按[CTRL+C]退出安装,使用 j,k 选择安装版本:" }}`
+	}
+
 	templates := &promptui.SelectTemplates{
-		Help: `{{ "按[CTRL+C]退出安装,使用方向键选择安装版本:" | faint }} {{ .NextKey | faint }} ` +
-			`{{ .PrevKey | faint }} {{ .PageDownKey | faint }} {{ .PageUpKey | faint }} ` +
-			`{{ if .Search }} {{ "and" | faint }} {{ .SearchKey | faint }} {{ "toggles search" | faint }}{{ end }}`,
+		Help: help,
 	}
 
 	prompt := &promptui.Select{
