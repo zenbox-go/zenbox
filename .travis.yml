@@ -4,8 +4,8 @@ go:
 go_import_path: zenbox
 
 env:
-  - "ZENBOX_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)"
-  - "GO_ARGS=-ldflags `-X main.version=$ZENBOX_VERSION -s -w`"
+  - ZENBOX_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
+  - GO_ARGS=$(echo "-ldflags \"-X main.version=$ZENBOX_VERSION -s -w\"")
 
 install:
   - go get -u github.com/golang/dep/cmd/dep
