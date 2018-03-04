@@ -14,9 +14,9 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 
 	"gopkg.in/cheggaaa/pb.v1"
-	"time"
 )
 
 var (
@@ -37,13 +37,10 @@ func downloadGolang(target, dest string) error {
 		os.Setenv("HTTPS_PROXY", DefaultProxyURL)
 	}
 
-	var uri string
+	uri := fmt.Sprintf("%s/%s", DefaultDownloadURLPrefix, target)
 
 	urlState := pingUrl(DefaultDownloadURLPrefix)
-	fmt.Println(urlState)
-	if urlState {
-		uri = fmt.Sprintf("%s/%s", DefaultDownloadURLPrefix, target)
-	} else {
+	if !urlState {
 		uri = fmt.Sprintf("%s/%s", StandbyDownloadURLPrefix, target)
 	}
 
@@ -229,15 +226,12 @@ func pingUrl(url string) bool {
 	client := http.Client{
 		Timeout: timeout,
 	}
-	resp, err := client.Get(url)
 
+	resp, err := client.Head(url)
 	if err != nil {
 		return false
 	}
 	defer resp.Body.Close()
-	_, err = ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return false
-	}
+
 	return true
 }

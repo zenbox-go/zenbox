@@ -2,9 +2,11 @@ package install_go
 
 import (
 	"io/ioutil"
+	"net/http"
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 )
 
 func TestDownloadGoVersion(t *testing.T) {
@@ -32,7 +34,7 @@ func TestDownloadGoVersion(t *testing.T) {
 }
 
 func TestGetAllGoVersion(t *testing.T) {
-	m, err := getAllGoVersion()
+	m, err := getGoVersions()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -40,4 +42,20 @@ func TestGetAllGoVersion(t *testing.T) {
 	for _, value := range m {
 		t.Log(value)
 	}
+}
+
+func TestPingURL(t *testing.T) {
+	// 超时3秒即代表地址无法访问
+	timeout := time.Duration(3 * time.Second)
+	client := http.Client{
+		Timeout: timeout,
+	}
+
+	resp, err := client.Head("https://www.google.com")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer resp.Body.Close()
+
+	t.Log("可以连接")
 }
