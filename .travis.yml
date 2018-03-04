@@ -2,20 +2,27 @@ language: go
 go:
   - "1.10.x"
 go_import_path: zenbox
-gobuild_args: -x -ldflags "-X main.version=$(git describe --tags `git rev-list --tags --max-count=1`) -s -w"
+
+env:
+  - GO_ARGS=-x -ldflags "-X main.version=$(git describe --tags `git rev-list --tags --max-count=1`) -s -w"
 
 install:
   - go get -u github.com/golang/dep/cmd/dep
 
 script:
   - dep ensure
-  - make
+  - GOOS=linux GOARCH=amd64 go build $GO_ARGS -o zenbox_linux
+  - GOOS=darwin GOARCH=amd64 go build $GO_ARGS -o zenbox_darwin
+  - GOOS=windows GOARCH=amd64 go build $GO_ARGS -o zenbox_windows.exe
 
-#deploy:
-#  provider: releases
-#  api_key:
-#    secure: $release-token
-#  file: zenbox
-#  skip_cleanup: true
-#  on:
-#    tags: true
+deploy:
+  provider: releases
+  api_key:
+    secure: $DEPLOY_TOKEN
+  file:
+   - "zenbox_linux"
+   - "zenbox_darwin"
+   - "zenbox_windows.exe"
+  skip_cleanup: true
+  on:
+    tags: true
