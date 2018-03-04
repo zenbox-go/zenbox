@@ -5,16 +5,15 @@ go_import_path: zenbox
 
 env:
   - ZENBOX_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
-  - GO_ARGS=-X main.version=$ZENBOX_VERSION -s -w
 
 install:
   - go get -u github.com/golang/dep/cmd/dep
 
 script:
   - dep ensure
-  - GOOS=linux GOARCH=amd64 go build -ldflags $GO_ARGS -o zenbox_linux
-  - GOOS=darwin GOARCH=amd64 go build -ldflags $GO_ARGS -o zenbox_darwin
-  - GOOS=windows GOARCH=amd64 go build -ldflags $GO_ARGS -o zenbox_windows.exe
+  - GOOS=linux GOARCH=amd64 go build -ldflags "-X main.version=$ZENBOX_VERSION -s -w" -o zenbox_linux
+  - GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.version=$ZENBOX_VERSION -s -w" -o zenbox_darwin
+  - GOOS=windows GOARCH=amd64 go build -ldflags "-X main.version=$ZENBOX_VERSION -s -w" -o zenbox_windows.exe
 
 deploy:
   provider: releases
