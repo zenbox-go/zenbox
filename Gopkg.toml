@@ -43,10 +43,6 @@ required = ["gopkg.in/urfave/cli.v2/altsrc"]
   branch = "master"
 
 [[constraint]]
-  name = "github.com/blang/semver"
-  version = "3.5.1"
-
-[[constraint]]
   name = "github.com/fsnotify/fsnotify"
   version = "1.4.7"
 
@@ -58,6 +54,3 @@ required = ["gopkg.in/urfave/cli.v2/altsrc"]
   branch = "master"
   name = "golang.org/x/oauth2"
 
-[[constraint]]
-  branch = "master"
-  name = "github.com/chzyer/readline"

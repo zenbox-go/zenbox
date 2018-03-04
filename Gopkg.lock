@@ -8,12 +8,6 @@
   version = "v0.3.0"
 
 [[projects]]
-  name = "github.com/blang/semver"
-  packages = ["."]
-  revision = "2ee87856327ba09384cabd113bc6b5d174e9ec0f"
-  version = "v3.5.1"
-
-[[projects]]
   branch = "master"
   name = "github.com/chzyer/readline"
   packages = ["."]
@@ -148,6 +142,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "37abedb8789b7e4bdfcaeb7b7132b38b32699fbb9a3be4656426afd3b7e4ca58"
+  inputs-digest = "f5080540af11618f898ab7f362b134711bc4927f8ab8213d6f6ed68cd3e52362"
   solver-name = "gps-cdcl"
   solver-version = 1
