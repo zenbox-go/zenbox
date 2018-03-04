@@ -47,6 +47,12 @@
   revision = "720a0952cc2ac777afc295d9861263e2a4cf96a1"
 
 [[projects]]
+  name = "github.com/labstack/gommon"
+  packages = ["color"]
+  revision = "57409ada9da0f2afad6664c49502f8c50fbd8476"
+  version = "0.2.3"
+
+[[projects]]
   branch = "master"
   name = "github.com/lunixbochs/vtclean"
   packages = ["."]
@@ -142,6 +148,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "f5080540af11618f898ab7f362b134711bc4927f8ab8213d6f6ed68cd3e52362"
+  inputs-digest = "cbfc7d62bd11d932fb60e2d03b4284c0092337de620d4b3ba20749f8d6e69e22"
   solver-name = "gps-cdcl"
   solver-version = 1

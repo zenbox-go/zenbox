@@ -54,3 +54,7 @@ required = ["gopkg.in/urfave/cli.v2/altsrc"]
   branch = "master"
   name = "golang.org/x/oauth2"
 
+
+[[constraint]]
+  name = "github.com/labstack/gommon"
+  version = "0.2.3"

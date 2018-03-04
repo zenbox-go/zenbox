@@ -7,14 +7,16 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"zenbox/print"
 
+	"github.com/labstack/gommon/color"
 	"github.com/manifoldco/promptui"
 )
 
 type step func(context.Context) error
 
 func welcome(_ context.Context) error {
-	fmt.Println("欢迎使用 Go 安装向导!")
+	color.Println(color.Green("欢迎使用 Go 安装向导!", color.B))
 
 	p1 := promptui.Prompt{
 		Label:     "是否需要安装 Go ",
@@ -36,7 +38,7 @@ func welcome(_ context.Context) error {
 func checkGoInstalled(ctx context.Context) error {
 	path, err := whichGo(ctx)
 	if err != nil {
-		fmt.Printf("检查 Go 是否应安装错误: %v\n", err)
+		print.DF("检查 Go 是否安装错误: %v", err)
 	}
 
 	if path == "" {
@@ -44,14 +46,13 @@ func checkGoInstalled(ctx context.Context) error {
 	}
 
 	if path != DefaultInstallPath {
-		fmt.Printf("\n检测到 %s 已安装,安装路径: [%v]\n\n", getLocalGoVersion(ctx), getGOROOT(ctx))
+		print.IF("检测到 %s 已安装,安装路径: [%v]", getLocalGoVersion(ctx), getGOROOT(ctx))
 	}
 
 	return nil
 }
 
 func setupGo(_ context.Context) error {
-	fmt.Print("正在获取Golang版本号列表...")
 	versions, err := getGoVersions()
 	if err != nil {
 		return err
@@ -104,7 +105,7 @@ func setupGo(_ context.Context) error {
 
 		os.RemoveAll(DefaultInstallPath)
 
-		fmt.Printf("正在安装 Go 到路径: [%s]\n", DefaultInstallPath)
+		fmt.Printf("正在安装 Go 到路径: [%s]", DefaultInstallPath)
 		if err := unpackFn(cacheFile, DefaultInstallPath); err != nil {
 			return fmt.Errorf("解压 Go 到目标路径 %s 失败: %v", DefaultInstallPath, err)
 		}
@@ -119,7 +120,7 @@ func setupGo(_ context.Context) error {
 		return err
 	}
 
-	fmt.Printf("\nGo%s 安装完成,安装路径: [%s]\n\n", version, DefaultInstallPath)
+	print.IF("Go%s 安装完成,安装路径: [%s]\n", version, DefaultInstallPath)
 
 	return nil
 }
@@ -150,7 +151,7 @@ func setGOPATH(_ context.Context) error {
 		return err
 	}
 
-	fmt.Printf("工作目录路径[GOPATH]: %s 设置完成!\n", gopath)
+	print.IF("工作目录路径[GOPATH]: %s 设置完成!", gopath)
 
 	return nil
 }

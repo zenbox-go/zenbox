@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 	"zenbox/cmd"
+	"zenbox/print"
 
 	"gopkg.in/urfave/cli.v2"
 )
@@ -51,6 +52,6 @@ func main() {
 
 	app.Flags = append(app.Flags, []cli.Flag{}...)
 	if err := app.Run(os.Args); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		print.E(err)
 	}
 }

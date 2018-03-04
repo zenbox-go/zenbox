@@ -15,6 +15,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"zenbox/print"
 
 	"gopkg.in/cheggaaa/pb.v1"
 )
@@ -44,7 +45,7 @@ func downloadGolang(target, dest string) error {
 		uri = fmt.Sprintf("%s/%s", StandbyDownloadURLPrefix, target)
 	}
 
-	fmt.Printf("开始下载 Go 安装包: %s\n", uri)
+	print.IF("开始下载 Go 安装包: %s\n", uri)
 
 	req, err := http.NewRequest("GET", uri, nil)
 	if !urlState {
@@ -133,7 +134,7 @@ func downloadGolang(target, dest string) error {
 	}
 
 	os.RemoveAll(dest)
-	fmt.Println("正在解压 Go 安装包...")
+	print.I("正在解压 Go 安装包...")
 	if err := unpackFn(targetFile.Name(), dest); err != nil {
 		return fmt.Errorf("解压 Go 到目标路径 %s 失败: %v", dest, err)
 	}

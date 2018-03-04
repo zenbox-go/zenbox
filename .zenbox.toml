@@ -1,0 +1,7 @@
+
+# 热编译配置
+[watcher]
+# 需要监控变化的文件名后缀列表
+exts = [".go", ".gohtml"]
+# 需要忽略监控变化的目录列表
+ignores = ["vendor", ".idea"]

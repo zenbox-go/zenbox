@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+	"zenbox/print"
 
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
@@ -46,6 +47,7 @@ func getGoVersions() ([]string, error) {
 }
 
 func getGoVersionsFormRemote() error {
+	print.I("正在获取远程 Go 版本号列表...")
 	ctx := context.Background()
 	client := github.NewClient(oauth2.NewClient(ctx, oauth2.StaticTokenSource(
 		&oauth2.Token{
@@ -90,6 +92,8 @@ func getGoVersionsFormRemote() error {
 
 		time.Sleep(200 * time.Millisecond)
 	}
+
+	print.I("获取远程 Go 版本号列表完成.")
 
 	return w.Flush()
 }
