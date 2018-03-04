@@ -56,7 +56,7 @@ func getGoVersionsFormRemote() error {
 	os.Mkdir("cache", os.ModePerm)
 	cacheFile, err := os.Create(filepath.Join("cache", "VERSION"))
 	if err != nil {
-		fmt.Printf("创建缓存文件错误: %v\n", err)
+		return fmt.Errorf("创建缓存文件错误: %v\n", err)
 	}
 	defer cacheFile.Close()
 
