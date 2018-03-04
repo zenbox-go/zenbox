@@ -25,13 +25,12 @@ func Sync(c context.Context) error {
 
 		return nil
 	}); err != nil {
-
 		return fmt.Errorf("遍历当前目录错误: %v", err)
 	}
 
 	go func() {
 		for err := range watcher.Errors {
-			fmt.Println(err)
+			fmt.Fprintf(os.Stderr, "文件监控错误: %v", err)
 		}
 	}()
 
