@@ -47,12 +47,14 @@ func checkGoInstalled(ctx context.Context) error {
 
 	if path != DefaultInstallPath {
 		print.IF("检测到 %s 已安装,安装路径: [%v]", getLocalGoVersion(ctx), getGOROOT(ctx))
+		m := ctx.Value(ContextKey).(map[string]interface{})
+		m["OldSetupPath"] = path
 	}
 
 	return nil
 }
 
-func setupGo(_ context.Context) error {
+func setupGo(ctx context.Context) error {
 	versions, err := getGoVersions()
 	if err != nil {
 		return err
@@ -91,24 +93,30 @@ func setupGo(_ context.Context) error {
 	cacheFile := filepath.Join("cache", "downloads", targetFile)
 
 	if _, e := os.Stat(cacheFile + ".sha256"); os.IsNotExist(e) {
-		if err := downloadGolang(targetFile, DefaultInstallPath); err != nil {
+		if cacheFile, err = downloadGolang(targetFile); err != nil {
 			// 下载安装包出现任何错误,都删除已下载的文件
 			os.Remove(cacheFile + ".sha256")
 			os.Remove(cacheFile)
 			return err
 		}
-	} else {
-		unpackFn := unpackTar
-		if runtime.GOOS == "windows" {
-			unpackFn = unpackZip
-		}
+	}
 
-		os.RemoveAll(DefaultInstallPath)
+	unpackFn := unpackTar
+	if runtime.GOOS == "windows" {
+		unpackFn = unpackZip
+	}
 
-		fmt.Printf("正在安装 Go 到路径: [%s]", DefaultInstallPath)
-		if err := unpackFn(cacheFile, DefaultInstallPath); err != nil {
-			return fmt.Errorf("解压 Go 到目标路径 %s 失败: %v", DefaultInstallPath, err)
-		}
+	m := ctx.Value(ContextKey).(map[string]interface{})
+	oldPath := m["OldSetupPath"].(string)
+	if oldPath != DefaultInstallPath {
+		os.Remove(oldPath)
+	}
+
+	os.Remove(DefaultInstallPath)
+
+	fmt.Printf("正在安装 Go 到路径: [%s]", DefaultInstallPath)
+	if err := unpackFn(cacheFile, DefaultInstallPath); err != nil {
+		return fmt.Errorf("解压 Go 到目标路径 %s 失败: %v", DefaultInstallPath, err)
 	}
 
 	// set $GOROOT

@@ -7,11 +7,15 @@ import (
 	"zenbox/print"
 )
 
+const ContextKey = "ContexyKey"
+
 var exitSetup = errors.New("取消安装")
 
 func Setup(ctx context.Context) {
+	c := context.WithValue(ctx, ContextKey, make(map[string]interface{}))
+
 	runStep := func(m step) {
-		err := m(ctx)
+		err := m(c)
 		if err == exitSetup {
 			print.W(err)
 			os.Exit(0)
