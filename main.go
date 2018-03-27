@@ -19,14 +19,14 @@ var (
 
 func main() {
 	app := &cli.App{
-		Name:                  "zenbox",
-		Usage:                 "做好用的 Go 项目管理工具",
-		Version:               version,
-		Compiled:              time.Now(),
-		Authors:               cmd.Authors,
-		HelpName:              "zenbox",
-		HideHelp:              true,
-		EnableShellCompletion: true,
+		Name:     "zenbox",
+		Usage:    "做好用的 Go 项目管理工具",
+		Version:  version,
+		Compiled: time.Now(),
+		Authors:  cmd.Authors,
+		HelpName: "zenbox",
+		HideHelp: true,
+		//EnableShellCompletion: true,
 		Commands: []*cli.Command{
 			cmd.CmdInit,
 			cmd.CmdTools,
@@ -52,6 +52,6 @@ func main() {
 
 	app.Flags = append(app.Flags, []cli.Flag{}...)
 	if err := app.Run(os.Args); err != nil {
-		print.E(err)
+		print.E(cli.Exit(err, 2))
 	}
 }
