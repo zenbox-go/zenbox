@@ -5,7 +5,7 @@ import "gopkg.in/urfave/cli.v2"
 var CmdHelp = &cli.Command{
 	Name:      "help",
 	Aliases:   []string{"h"},
-	Usage:     "显示所有帮助信息或者显示单个指令的帮助信息(goc help setup)",
+	Usage:     "显示所有帮助信息或者显示单个指令的帮助信息(zenbox help setup)",
 	ArgsUsage: "[command]",
 	Action: func(c *cli.Context) error {
 		args := c.Args()
