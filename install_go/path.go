@@ -10,7 +10,8 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-	"zenbox/util"
+
+	"zenbox/print"
 )
 
 const (
@@ -72,8 +73,14 @@ func shellConfigFile() (string, error) {
 }
 
 func persistEnvVarWindows(name, value string) error {
-	_, err := util.RunCommand(context.Background(), "powershell", "-command",
-		fmt.Sprintf(`[Environment]::SetEnvironmentVariable("%s", "%s", "User")`, name, value))
+	out, err := exec.Command(
+		"powershell",
+		"-command",
+		fmt.Sprintf(`[Environment]::SetEnvironmentVariable("%s", "%s", "User")`, name, value),
+	).CombinedOutput()
+	if out != nil && err == nil && len(out) != 0 {
+		print.E(out)
+	}
 	return err
 }
 
