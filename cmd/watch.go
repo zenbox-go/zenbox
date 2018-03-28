@@ -22,5 +22,5 @@ func watchAction(c *cli.Context) error {
 	}
 
 	ctx := context.WithValue(context.Background(), "CONFIG", cfg)
-	return watcher.Sync(ctx)
+	return watcher.Watch(ctx)
 }

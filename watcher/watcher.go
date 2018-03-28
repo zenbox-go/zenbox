@@ -14,7 +14,7 @@ import (
 	"github.com/fsnotify/fsnotify"
 )
 
-func Sync(c context.Context) error {
+func Watch(c context.Context) error {
 	cfg, ok := c.Value("CONFIG").(*config.Config)
 	if !ok {
 		return errors.New("配置文件错误")

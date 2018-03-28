@@ -26,7 +26,7 @@ func main() {
 		Authors:  cmd.Authors,
 		HelpName: "zenbox",
 		HideHelp: true,
-		//EnableShellCompletion: true,
+		// EnableShellCompletion: true,
 		Commands: []*cli.Command{
 			cmd.CmdInit,
 			cmd.CmdTools,

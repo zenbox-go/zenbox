@@ -109,10 +109,10 @@ func setupGo(ctx context.Context) error {
 	m := ctx.Value(ContextKey).(map[string]interface{})
 	oldPath := m["OldSetupPath"].(string)
 	if oldPath != DefaultInstallPath {
-		os.Remove(oldPath)
+		os.RemoveAll(oldPath)
 	}
 
-	os.Remove(DefaultInstallPath)
+	os.RemoveAll(DefaultInstallPath)
 
 	fmt.Printf("正在安装 Go 到路径: [%s]", DefaultInstallPath)
 	if err := unpackFn(cacheFile, DefaultInstallPath); err != nil {
