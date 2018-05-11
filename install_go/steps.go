@@ -107,8 +107,8 @@ func setupGo(ctx context.Context) error {
 	}
 
 	m := ctx.Value(ContextKey).(map[string]interface{})
-	oldPath := m["OldSetupPath"].(string)
-	if oldPath != DefaultInstallPath {
+	oldPath, ok := m["OldSetupPath"].(string)
+	if ok && oldPath != DefaultInstallPath {
 		os.RemoveAll(oldPath)
 	}
 
